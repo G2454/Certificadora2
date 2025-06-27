@@ -1,10 +1,16 @@
 // screens/HomeScreen.js
 import React, {useState, useEffect} from 'react';
-import { View, Text, Button, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { View, Text, Button, StyleSheet, Image, TouchableOpacity, Linking } from 'react-native';
 import utfprLogo from '../../assets/CPUTFPR.png'
 import { Feather } from '@expo/vector-icons';
 
 export default function Instituicao({ navigation }) {
+  
+    const handlePress = () => {
+    const url = 'https://www.utfpr.edu.br/campus/cornelioprocopio';
+    Linking.openURL(url).catch(err => console.error("Não foi possível abrir o link", err));
+  };
+
   return (
     <View style={styles.container}>
         <View style={{top:'-20%'}}>
@@ -12,13 +18,15 @@ export default function Instituicao({ navigation }) {
             <View style={{width:'80%'}}>
             <Text style={{fontWeight:'bold', fontSize:16, marginTop:'-30'}}>A Universidade Tecnológica Federal do Paraná é referência em ensino, pesquisa e extensão. Com cursos gratuitos e estrutura de qualidade, ela pode ser o seu próximo passo depois do Prisma.</Text>
             </View>
-            <TouchableOpacity style={{ top: 50, justifyContent: 'center', alignItems: 'center' }}>
-  <View style={styles.button}>
-    <Feather name="paperclip" size={20} color="black" style={{ marginRight: 8 }} />
-    <Text style={styles.buttonText}>Ver cursos e vestibular</Text>
-  </View>
-</TouchableOpacity>
-
+            <TouchableOpacity 
+              style={{ top: 50, justifyContent: 'center', alignItems: 'center' }}
+              onPress={handlePress}
+            >
+              <View style={styles.button}>
+                <Feather name="paperclip" size={20} color="black" style={{ marginRight: 8 }} />
+                <Text style={styles.buttonText}>Ver cursos e vestibular</Text>
+              </View>
+            </TouchableOpacity>
         </View>
     </View>
   );

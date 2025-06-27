@@ -1,10 +1,11 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Routes from './src/routes/Routes';
+import DrawerNavigator from './src/routes/DrawerNavigator';
 import * as SplashScreen from 'expo-splash-screen';
 import React, { useEffect, useState } from 'react'
 import DMSansRegular from './assets/fonts/DMSans-Regular.ttf'
 import DMSansSemiBold from './assets/fonts/DMSans-SemiBold.ttf'
+import 'react-native-gesture-handler';
 
 export default function App() {
   const [fontsLoaded, setFontsLoaded] = useState(false);
@@ -37,6 +38,8 @@ export default function App() {
   }, []);
 
   return (
-<Routes />
+    <NavigationContainer>
+      <DrawerNavigator />
+    </NavigationContainer>
   );
 }

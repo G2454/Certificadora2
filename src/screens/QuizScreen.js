@@ -6,6 +6,7 @@ import { ActivityIndicator, ScrollView, StyleSheet, Text, TouchableOpacity, View
 import Button from '../components/Button';
 import { theme } from '../constants/theme';
 import { getQuestionsBySubject } from '../services/quizService';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
    LogBox.ignoreAllLogs(true); // This will suppress all log notifications (yellow boxes) in Expo
 
@@ -20,25 +21,68 @@ const QuizScreen = ({ route, navigation }) => {
   const [loading, setLoading] = useState(true);
 
 
-
-
   const Alternative = ({ text, onPress, state = 'default' }) => {
     const getContainerStyle = () => { switch (state) { case 'selected': return { borderColor: theme.colors.primary, backgroundColor: '#E6F2FF' }; case 'correct': return { borderColor: theme.colors.success, backgroundColor: '#EAF9E9' }; case 'incorrect': return { borderColor: theme.colors.danger, backgroundColor: '#FFEBEA' }; default: return { borderColor: theme.colors.secondary }; } };
     const getIcon = () => { switch (state) { case 'correct': return <CheckCircle color={theme.colors.success} size={24} />; case 'incorrect': return <XCircle color={theme.colors.danger} size={24} />; case 'selected': return <Circle color={theme.colors.primary} size={24} fill={theme.colors.primary} />; default: return <Circle color={theme.colors.gray} size={24} />; } };
-    return (<TouchableOpacity style={[styles.alternativeContainer, getContainerStyle()]} onPress={onPress}> {getIcon()} <Text style={styles.alternativeText}>{text}</Text> </TouchableOpacity>);
+    return (<TouchableOpacity style={[styles.alternativeContainer, getContainerStyle()]} onPress={onPress}>{getIcon()}<Text style={styles.alternativeText}>{text}</Text></TouchableOpacity>);
 };
 
   useEffect(() => { const fetchQuestions = async () => { setQuestions(await getQuestionsBySubject(subject)); setLoading(false); }; fetchQuestions(); }, [subject]);
+
+
+  // Efeito para navegar quando o quiz terminar
+  useEffect(() => {
+    const handleQuizEnd = async () => {
+      if (!loading && currentQuestionIndex >= questions.length) {
+        try {
+          // 1. Pega os resultados antigos
+          const existingResults = await AsyncStorage.getItem('@quiz_results');
+          const results = existingResults ? JSON.parse(existingResults) : [];
+
+          // 2. Adiciona o novo resultado
+          const newResult = {
+            score,
+            total: questions.length,
+            date: new Date().toISOString(), // Salva a data para referência
+          };
+          results.push(newResult);
+
+          // 3. Salva a lista atualizada de volta no AsyncStorage
+          await AsyncStorage.setItem('@quiz_results', JSON.stringify(results));
+
+        } catch (e) {
+          console.error("Erro ao salvar o resultado.", e);
+        } finally {
+          // 4. Navega para a tela de resultados
+          navigation.replace('Resultado', { score, total: questions.length });
+        }
+      }
+    };
+
+    handleQuizEnd();
+  }, [currentQuestionIndex, loading, navigation, questions, score]);
+
   
   const handleSelectAnswer = (alternative) => { if (!isAnswered) setSelectedAnswer(alternative); };
   const handleConfirmAnswer = () => { if (!selectedAnswer) return; setIsAnswered(true); if (selectedAnswer.isCorrect) setScore(prev => prev + 1); };
+  
+  // Função de avançar simplificada
   const handleNextQuestion = () => {
     const nextIndex = currentQuestionIndex + 1;
-    if (nextIndex < questions.length) { setCurrentQuestionIndex(nextIndex); setSelectedAnswer(null); setIsAnswered(false); } 
-    else { navigation.replace('Resultado', { score, total: questions.length }); }
+    // Apenas atualiza o índice ou avança para o "estado final" (índice > tamanho)
+    setCurrentQuestionIndex(nextIndex);
+    setSelectedAnswer(null);
+    setIsAnswered(false);
   };
 
   if (loading) return <ActivityIndicator size="large" color={theme.colors.primary} style={{ flex: 1 }} />;
+  
+  // Evita erro ao tentar acessar uma questão que não existe
+  if (currentQuestionIndex >= questions.length) {
+    // Pode mostrar um último loader ou simplesmente nada enquanto o useEffect navega
+    return <ActivityIndicator size="large" color={theme.colors.primary} style={{ flex: 1 }} />;
+  }
+
   const currentQuestion = questions[currentQuestionIndex];
 
   return (

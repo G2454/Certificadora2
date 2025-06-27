@@ -1,8 +1,8 @@
-
 import { Menu } from 'lucide-react-native';
 import { Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { theme } from '../constants/theme';
 import Logo from "../../assets/icon.png"
+
 const TelaPrincipal = ({ navigation }) => {
   const topic = 'Análise de Circuitos'; 
 
@@ -10,9 +10,10 @@ const TelaPrincipal = ({ navigation }) => {
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         <View style={styles.header}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.openDrawer()}>
             <Menu size={28} color={theme.colors.text} />
           </TouchableOpacity>
+          
           <Text style={styles.headerTitle}>Início</Text>
           <Image
             source={Logo}
@@ -97,31 +98,3 @@ const styles = StyleSheet.create({
 });
 
 export default TelaPrincipal;
-
-
-
-/*
-// screens/HomeScreen.js
-import React, {useState, useEffect} from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
-
-export default function HomeScreen({ navigation }) {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Contato</Text>
-      <Button
-        title="Contato"
-        onPress={() => navigation.navigate('Contato')}
-      />
-    <Text>Sobre a Instituicao</Text>
-    <Button
-        title="Instituicao"
-        onPress={() => navigation.navigate('Instituicao')}
-      />
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({});
-
-*/
