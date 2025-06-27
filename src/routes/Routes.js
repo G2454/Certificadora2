@@ -6,7 +6,10 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import TelaPrincipal from '../screens/TelaPrincipal.js'
 import Contato from '../screens/Contato.js'
 import Instituicao from '../screens/Instituicao.js';
+import QuizScreen from '../screens/QuizScreen.js';
+import ResultScreen from '../screens/ResultScreen.js';
 import icon from '../../assets/icon.png'
+import { theme } from '../constants/theme.js';
 
 const Stack = createNativeStackNavigator();
 
@@ -27,7 +30,13 @@ export default function Routes() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="TelaPrincipal">
-        <Stack.Screen name="TelaPrincipal" component={TelaPrincipal} />
+        <Stack.Screen name="TelaPrincipal" component={TelaPrincipal}
+        options={
+          {
+            headerShown:false
+          }
+        }
+        />
         <Stack.Screen name="Contato" component={Contato} options={{
           headerShadowVisible:false,
           headerTitle:'Contato Prisma',
@@ -44,7 +53,29 @@ export default function Routes() {
             fontWeight: 'bold'
           },
           headerTitle: (props) => <LogoTitle {...props} />
-                  }} />
+          }} />
+  <Stack.Screen 
+            name="Quiz" 
+            component={QuizScreen} 
+            options={{ 
+              headerShown: true, 
+              title: 'Questão',
+              headerStyle: { 
+                backgroundColor: theme.colors.background,
+                elevation: 0, 
+                shadowOpacity: 0,
+              },
+              headerTintColor: theme.colors.text,
+              headerRight: () => (
+                <Image
+                  source={icon}
+                  style={{width: 32,height: 32,marginRight: theme.spacing.md}}
+                />
+              ),
+            }} 
+          />
+        <Stack.Screen name="Resultado" component={ResultScreen} />
+
       </Stack.Navigator>
     </NavigationContainer>
   );

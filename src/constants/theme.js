@@ -1,0 +1,25 @@
+export const theme = {
+  colors: {
+    primary: '#007AFF',
+    primaryDark: '#0056b3',
+    secondary: '#E5E5EA',
+    background: '#FFFFFF',
+    card: '#FFFFFF',
+    text: '#1C1C1E',
+    textSecondary: '#6D6D72',
+    success: '#34C759',
+    danger: '#FF3B30',
+    white: '#FFFFFF',
+    black: '#000000',
+    gray: '#8E8E93',
+  },
+  spacing: { xs: 4, sm: 8, md: 16, lg: 24, xl: 40 },
+  typography: {
+    h1: { fontSize: 34, fontWeight: 'bold' },
+    h2: { fontSize: 28, fontWeight: 'bold' },
+    h3: { fontSize: 22, fontWeight: 'bold' },
+    body: { fontSize: 17 },
+    caption: { fontSize: 12 },
+  },
+  borderRadius: { sm: 8, md: 12, lg: 16 },
+};
